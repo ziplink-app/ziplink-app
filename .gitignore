@@ -1,0 +1,16 @@
+.idea
+/venv
+.venv
+/hoxton/.env
+*.pyc
+*.pyo
+/node_modules
+/*/static
+/static
+.env
+.pytest_cache
+**/.pytest_cache
+.direnv
+.envrc
+.vscode
+.tool-versions

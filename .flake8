@@ -1,0 +1,25 @@
+[flake8]
+max-line-length = 110
+exclude = .venv/*,venv/,.direnv/,.git,__pycache__,*/migrations/*
+ignore = A003,W503
+per-file-ignores =
+    apps/dashboard/views/scans_views.py: E501,CFQ001
+    apps/core/logging.py: A005
+    tests/customer/conftest.py: CFQ001
+    tests/checkout/test_checkout_views.py: CFQ002
+    apps/subscriptions/services.py: CFQ001
+    tests/integrations/chargebee/test_integrations_chargebee_payment_webhook.py: CFQ002
+    tests/integrations/chargebee/test_integrations_chargebee_invoice_generated.py: CFQ002
+    tests/integrations/chargebee/test_integrations_chargebee_invoice_updated.py: CFQ002
+    tests/integrations/chargebee/test_integrations_chargebee_views.py: CFQ002
+    tests/offers/test_offers_api_view.py: CFQ002
+    tests/integrations/chargebee/test_integrations_chargebee_subscription_webhook.py: CFQ002
+    tests/integrations/chargebee/test_integrations_chargebee_customer_webhook.py: CFQ002
+    apps/dashboard/helpers/xero.py:97:5: CFQ002
+    apps/dashboard/views/billing_views.py: CFQ001
+    apps/dashboard/views/scans_views.py: CFQ001
+    apps/notifications/emails/models.py: CFQ002
+    tests/subscriptions/test_create_subscription_api_view.py: CFQ001
+    tests/subscriptions/test_update_subscription_api_view.py: CFQ001
+    apps/dashboard/helpers/xero.py: CFQ002
+    apps/mailbox/management/commands/log_migration.py: T201

@@ -1,0 +1,119 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: url-redirect
+# app and org for use with dashboard.serverless.com
+app: zip-link
+org: zip-link
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.11
+
+# you can overwrite defaults here
+#  stage: dev
+#  region: us-east-1
+
+plugins:
+  - serverless-plugin-resource-tagging
+  - serverless-python-requirements
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+#package:
+#  include:
+#    - include-me.py
+#    - include-me-dir/**
+#  exclude:
+#    - exclude-me.py
+#    - exclude-me-dir/**
+
+functions:
+  redirect-url:
+    handler: apps.redirect.handlers.handler
+#    The following are a few example events you can configure
+#    NOTE: Please make sure to change your handler code to work with those events
+#    Check the event documentation for details
+    events:
+      - httpApi:
+          path: /{param}
+          method: get
+
+resources:
+  Resources:
+    ApiGateway:
+      Type: AWS::ApiGatewayV2::Api
+      Properties:
+        Name: ZipLinkApi
+        ProtocolType: HTTP
+        RouteSelectionExpression: $request.body.action
+#    NewResource:
+#      Type: AWS::DynamoDB::Table
+#      Properties:
+#        AttributeDefinitions:
+#          - AttributeDefinition
+#        BillingMode: "PAY_PER_REQUEST"
+#        ContributorInsightsSpecification:
+#          ContributorInsightsSpecification
+#        DeletionProtectionEnabled: Boolean
+#        GlobalSecondaryIndexes:
+#          - GlobalSecondaryIndex
+#        ImportSourceSpecification:
+#          ImportSourceSpecification
+#        KeySchema:
+#          - KeySchema
+#        KinesisStreamSpecification:
+#          KinesisStreamSpecification
+#        LocalSecondaryIndexes:
+#          - LocalSecondaryIndex
+#        PointInTimeRecoverySpecification:
+#          PointInTimeRecoverySpecification
+#        ProvisionedThroughput:
+#          ProvisionedThroughput
+#        SSESpecification:
+#          SSESpecification
+#        StreamSpecification:
+#          StreamSpecification
+#        TableClass: String
+#        TableName: ShortUrl
+#        Tags:
+#          - Tag
+#        TimeToLiveSpecification:
+#          TimeToLiveSpecification
+#  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"
