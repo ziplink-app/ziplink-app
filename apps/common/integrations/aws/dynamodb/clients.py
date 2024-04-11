@@ -10,13 +10,15 @@ class DynamoClient:
         try:
             self.client.put_item(TableName=table_name, Item=item)
         except botocore.exceptions.ClientError as err:
-            raise
+            raise err
 
-    def get(self, table_name: str, id_field: str, id: str):
+    def get(self, table_name: str, id_field: str, id_value: str):
         try:
-            response = self.client.get_item(TableName=table_name, Key={id_field: id})
+            response = self.client.get_item(
+                TableName=table_name, Key={id_field: id_value}
+            )
         except botocore.exceptions.ClientError as err:
-            raise
+            raise err
         else:
             return response["Item"]
 
@@ -29,11 +31,11 @@ class DynamoClient:
     def scan(self, year_range):
         raise NotImplementedError
 
-    def delete(self, table_name: str, id_field: str, id: str):
+    def delete(self, table_name: str, id_field: str, id_value: str):
         try:
-            self.client.delete_item(TableName=table_name, Key={id_field: id})
+            self.client.delete_item(TableName=table_name, Key={id_field: id_value})
         except botocore.exceptions.ClientError as err:
-            raise
+            raise err
 
 
 def get_dynamo_client():

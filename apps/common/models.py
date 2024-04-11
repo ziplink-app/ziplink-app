@@ -1,5 +1,5 @@
-from dataclasses import dataclass
 import datetime
+from dataclasses import dataclass
 
 from apps.common.integrations.aws.dynamodb.clients import get_dynamo_client
 
@@ -7,19 +7,18 @@ from apps.common.integrations.aws.dynamodb.clients import get_dynamo_client
 class BaseModel:
     def __init__(self):
         # Todo use generic client here
-        self.client  = get_dynamo_client()
+        self.client = get_dynamo_client()
 
-    def get(self, id) -> "BaseModel":
+    def get(self, key) -> "BaseModel":
         raise NotImplementedError
 
 
 @dataclass
 class ShortUrl(BaseModel):
-    hash: str
-    ttl: datetime
+    url_hash: str
     url: str
+    ttl: datetime
 
-    def get(self, hash) -> "ShortUrl":
-        response = self.client.get("short_url", "hash", hash)
+    def get(self, key) -> "ShortUrl":
+        response = self.client.get("short_url", "url_hash", key)
         return response
-
