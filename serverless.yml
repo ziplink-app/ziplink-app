@@ -13,8 +13,8 @@
 
 service: url-redirect
 # app and org for use with dashboard.serverless.com
-app: zip-link
-org: zip-link
+app: ziplink
+org: ziplink
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -23,97 +23,67 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: python3.11
+  region: eu-west-2
+  stage: ${opt:stage,'staging'}
 
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  tags:
+    APP: 'ziplink'
+    ENV: ${sls:stage}
+
+  stackTags:
+    APP: 'ziplink'
+  deploymentBucket:
+    name: ziplink-app-serverless
+    maxPreviousDeploymentArtifacts: ${self:custom.previous_deployments.${sls:stage}}
+    blockPublicAccess: true
+
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Resource: '*'
+          Action:
+            - 'apigatewway:*'
 
 plugins:
   - serverless-plugin-resource-tagging
   - serverless-python-requirements
 
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
+package:
+  individually: true
 
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.py
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.py
-#    - exclude-me-dir/**
+custom:
+  stages:
+    - local
+    - staging
+    - production
+  pythonRequirements:
+    layer: true
+    slim: true
+  env:
+    local: "local"
+    staging: "staging"
+    production: "production"
+  previous_deployments:
+    local: 0
+    staging: 1
+    production: 5
 
 functions:
   redirect-url:
     handler: apps.redirect.handlers.handler
-    #    The following are a few example events you can configure
-    #    NOTE: Please make sure to change your handler code to work with those events
-    #    Check the event documentation for details
     events:
       - httpApi:
           path: /{param}
           method: get
+    package:
+      # Directories and files to include in the deployed package
+      patterns:
+        - 'apps/redirect/**'
+        - 'apps/common/**'
+    layers:
+      - Ref: PythonRequirementsLambdaLayer
 
 resources:
-  Resources:
-    ApiGateway:
-      Type: AWS::ApiGatewayV2::Api
-      Properties:
-        Name: ZipLinkApi
-        ProtocolType: HTTP
-        RouteSelectionExpression: $request.body.action
-#    NewResource:
-#      Type: AWS::DynamoDB::Table
-#      Properties:
-#        AttributeDefinitions:
-#          - AttributeDefinition
-#        BillingMode: "PAY_PER_REQUEST"
-#        ContributorInsightsSpecification:
-#          ContributorInsightsSpecification
-#        DeletionProtectionEnabled: Boolean
-#        GlobalSecondaryIndexes:
-#          - GlobalSecondaryIndex
-#        ImportSourceSpecification:
-#          ImportSourceSpecification
-#        KeySchema:
-#          - KeySchema
-#        KinesisStreamSpecification:
-#          KinesisStreamSpecification
-#        LocalSecondaryIndexes:
-#          - LocalSecondaryIndex
-#        PointInTimeRecoverySpecification:
-#          PointInTimeRecoverySpecification
-#        ProvisionedThroughput:
-#          ProvisionedThroughput
-#        SSESpecification:
-#          SSESpecification
-#        StreamSpecification:
-#          StreamSpecification
-#        TableClass: String
-#        TableName: ShortUrl
-#        Tags:
-#          - Tag
-#        TimeToLiveSpecification:
-#          TimeToLiveSpecification
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+  - ${file(infrastructure/dynamodb_table.yml)}
+  - ${file(infrastructure/api_gateway.yml)}

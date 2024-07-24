@@ -1,4 +1,4 @@
-from src.services.redirect_service import redirect_url
+from apps.redirect.services import redirect_url
 
 
 def handler(event: dict, context: dict):

@@ -15,10 +15,13 @@ class BaseModel:
 
 @dataclass
 class ShortUrl(BaseModel):
-    url_hash: str
+    hash: str
     url: str
     ttl: datetime
 
+    def __init__(self):
+        super().__init__()
+
     def get(self, key) -> "ShortUrl":
-        response = self.client.get("short_url", "url_hash", key)
+        response = self.client.get("short_url", "hash", key)
         return response

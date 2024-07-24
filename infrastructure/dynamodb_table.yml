@@ -1,0 +1,18 @@
+Resources:
+  Type: AWS::DynamoDB::Table
+  TableName: 'short_url'
+  Properties:
+    AttributeDefinitions:
+      - AttributeName: hash
+        AttributeType: S
+      - AttributeName: url
+        AttributeType: S
+    KeySchema:
+      - AttributeName: hash
+        KeyType: HASH
+      - AttributeName: url
+        KeyType: RANGE
+    BillingMode: 'PAY_PER_REQUEST'
+    TimeToLiveSpecification:
+      - AttributeName: expires_at
+      - Enabled: true
