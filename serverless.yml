@@ -61,17 +61,21 @@ custom:
     layer: true
     slim: true
   env:
-    local: "local"
-    staging: "staging"
-    production: "production"
+    local: 'local'
+    staging: 'staging'
+    production: 'production'
   previous_deployments:
     local: 0
     staging: 1
     production: 5
+  db:
+    local: 'DYNAMO_DB'
+    staging: 'DYNAMO_DB'
+    production: 'DYNAMO_DB'
 
 functions:
   redirect-url:
-    handler: apps.redirect.handlers.handler
+    handler: apps.short_links.handlers.redirect_handler
     events:
       - httpApi:
           path: /{param}

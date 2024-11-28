@@ -1,4 +1,4 @@
-from apps.common.models import ShortUrl
+from apps.common.models.short_url import ShortUrl
 
 
 def redirect_url(event: dict) -> str:

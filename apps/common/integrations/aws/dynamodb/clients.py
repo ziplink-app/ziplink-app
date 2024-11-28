@@ -1,26 +1,37 @@
+import os
+
 import boto3
 import botocore
 
+from apps.common.db.clients import DBClient
 
-class DynamoClient:
+
+class DynamoClient(DBClient):
     def __init__(self):
-        self.client = boto3.client("dynamodb")
+        self.client = boto3.client(
+            "dynamodb",
+            endpoint_url="http://localhost:8090",  # DynamoDB Local endpoint
+            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+            region_name=os.getenv("AWS_REGION"),
+        )
 
     def add(self, table_name: str, item: {}):
         try:
-            self.client.put_item(TableName=table_name, Item=item)
+            response = self.client.put_item(TableName=table_name, Item=item)
+            return response
         except botocore.exceptions.ClientError as err:
             raise err
 
     def get(self, table_name: str, id_field: str, id_value: str):
         try:
-            response = self.client.get_item(
-                TableName=table_name, Key={id_field: id_value}
-            )
+            key = {id_field: {"S": id_value}}
+            response = self.client.get_item(TableName=table_name, Key=key)
+            return response["Item"]
         except botocore.exceptions.ClientError as err:
             raise err
-        else:
-            return response["Item"]
+        except KeyError:
+            return {}
 
     def update(self, title, year, rating, plot):
         raise NotImplementedError
