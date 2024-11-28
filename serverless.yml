@@ -1,23 +1,8 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
-
 service: url-redirect
-# app and org for use with dashboard.serverless.com
+
 app: ziplink
 org: ziplink
 
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
 frameworkVersion: '3'
 
 provider:
@@ -80,6 +65,20 @@ functions:
       - httpApi:
           path: /{param}
           method: get
+    package:
+      # Directories and files to include in the deployed package
+      patterns:
+        - 'apps/redirect/**'
+        - 'apps/common/**'
+    layers:
+      - Ref: PythonRequirementsLambdaLayer
+
+  create-redirect-url:
+    handler: apps.short_links.handlers.create_handler
+    events:
+      - httpApi:
+          path: /
+          method: post
     package:
       # Directories and files to include in the deployed package
       patterns:

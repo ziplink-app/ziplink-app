@@ -1,5 +1,6 @@
 import datetime
 from dataclasses import dataclass
+from dataclasses_json import dataclass_json
 
 from apps.common.models.base_model import BaseModel
 from apps.common.serializers.short_url_serializers import ShortUrlSerializer
