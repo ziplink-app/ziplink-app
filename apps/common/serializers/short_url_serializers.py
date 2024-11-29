@@ -8,7 +8,7 @@ class ShortUrlSerializer(Serializer):
             return {
                 "hash": {"S": obj.hash},
                 "url": {"S": obj.url},
-                "ttl": {"S": str(obj.ttl)},
+                "expires_at": {"S": str(obj.expires_at)},
             }
         return None
 
@@ -16,5 +16,5 @@ class ShortUrlSerializer(Serializer):
         if type(obj.client) is DynamoClient:
             obj.hash = kwargs.get("hash", {}).get("S")
             obj.url = kwargs.get("url", {}).get("S")
-            obj.ttl = kwargs.get("ttl", {}).get("S")
+            obj.expires_at = kwargs.get("expires_at", {}).get("S")
         return obj

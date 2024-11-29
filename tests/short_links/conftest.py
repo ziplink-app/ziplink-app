@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 import pytest
@@ -55,7 +56,7 @@ def build_api_gateway_event(method: str, path: str, body: dict = {}):
             "time": "12/Mar/2020:19:03:58 +0000",
             "timeEpoch": 1583348638390,
         },
-        "body": body,
+        "body": json.dumps(body),
         "pathParameters": {"parameter1": "value1"},
         "isBase64Encoded": True,
         "stageVariables": {"stageVariable1": "value1", "stageVariable2": "value2"},

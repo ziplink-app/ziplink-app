@@ -1,7 +1,0 @@
-Resources:
-  ApiGateway:
-    Type: AWS::ApiGatewayV2::Api
-    Properties:
-      Name: ZipLinkApi
-      ProtocolType: HTTP
-      RouteSelectionExpression: $request.body.action

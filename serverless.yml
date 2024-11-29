@@ -1,7 +1,6 @@
 service: url-redirect
 
 app: ziplink
-org: ziplink
 
 frameworkVersion: '3'
 
@@ -18,7 +17,7 @@ provider:
   stackTags:
     APP: 'ziplink'
   deploymentBucket:
-    name: ziplink-app-serverless
+    name: ziplink-serverless
     maxPreviousDeploymentArtifacts: ${self:custom.previous_deployments.${sls:stage}}
     blockPublicAccess: true
 
@@ -29,6 +28,11 @@ provider:
           Resource: '*'
           Action:
             - 'apigatewway:*'
+            - 'dynamodb:PutItem'
+            - 'dynamodb:GetItem'
+
+  httpApi:
+    disableDefaultEndpoint: true
 
 plugins:
   - serverless-plugin-resource-tagging
@@ -70,6 +74,8 @@ functions:
       patterns:
         - 'apps/redirect/**'
         - 'apps/common/**'
+    environment:
+      DB: ${self:custom.db.${sls:stage}}
     layers:
       - Ref: PythonRequirementsLambdaLayer
 
@@ -84,9 +90,10 @@ functions:
       patterns:
         - 'apps/redirect/**'
         - 'apps/common/**'
+    environment:
+      DB: ${self:custom.db.${sls:stage}}
     layers:
       - Ref: PythonRequirementsLambdaLayer
 
 resources:
-  - ${file(infrastructure/dynamodb_table.yml)}
-  - ${file(infrastructure/api_gateway.yml)}
+  - ${file(infrastructure/aws/dynamodb_table.yml)}
