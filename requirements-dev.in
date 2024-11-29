@@ -1,5 +1,6 @@
 pip-tools
 black
+cfgv
 isort
 flake8
 pytest
