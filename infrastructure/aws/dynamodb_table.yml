@@ -1,0 +1,15 @@
+Resources:
+  ZipLinkDb:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: 'short_url'
+      AttributeDefinitions:
+        - AttributeName: hash
+          AttributeType: S
+      KeySchema:
+        - AttributeName: hash
+          KeyType: HASH
+      BillingMode: 'PAY_PER_REQUEST'
+      TimeToLiveSpecification:
+        AttributeName: expires_at
+        Enabled: true

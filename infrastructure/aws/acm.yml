@@ -1,0 +1,5 @@
+Resources:
+  HttpsAcmCert:
+    Type: AWS::DynamoDB::Table
+    Properties:
+
