@@ -3,7 +3,7 @@ import json
 
 from apps.common.exceptions import IllegalArgumentException, NotFoundException
 from apps.common.models.short_url import ShortUrl
-from apps.short_links.helpers import generate_hash
+from apps.short_links.helpers import generate_hash, get_url_expiry
 
 
 def redirect_url(event: dict) -> str:
@@ -31,11 +31,12 @@ def create_redirect_url(event: dict) -> dict:
     url = json.loads(event.get("body", "{}")).get("url")
     if not url:
         raise IllegalArgumentException(message="url is a required field")
+    expiry = get_url_expiry()
     return ShortUrl().create(
         **{
             "url": url,
             "hash": generate_hash(),
-            "expires_at": datetime.datetime.now() + datetime.timedelta(hours=1),
+            "expires_at": expiry,
         }
     ).to_json()
 

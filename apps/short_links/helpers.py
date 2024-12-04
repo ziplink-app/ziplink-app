@@ -1,3 +1,4 @@
+import datetime
 import hashlib
 import random
 
@@ -11,3 +12,6 @@ def generate_hash():
     # if is_existing_hash:
     #     short_hash = self.generate_as_short_sha256()
     return short_hash
+
+def get_url_expiry() -> float:
+    return int((datetime.datetime.now() + datetime.timedelta(hours=1)).timestamp())

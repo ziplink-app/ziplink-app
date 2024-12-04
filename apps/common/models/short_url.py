@@ -12,7 +12,7 @@ logger = get_logger(__name__)
 class ShortUrl(BaseModel):
     hash: str
     url: str
-    expires_at: datetime
+    expires_at: int
 
     def __init__(self):
         super().__init__()

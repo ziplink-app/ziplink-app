@@ -1,4 +1,4 @@
-service: url-redirect
+service: ziplink
 
 app: ziplink
 
@@ -69,8 +69,8 @@ functions:
       - httpApi:
           path: /{param}
           method: get
+          restApiId: !Ref HttpApi  # Reference the custom API Gateway
     package:
-      # Directories and files to include in the deployed package
       patterns:
         - 'apps/redirect/**'
         - 'apps/common/**'
@@ -85,8 +85,8 @@ functions:
       - httpApi:
           path: /
           method: post
+          restApiId: !Ref HttpApi  # Reference the custom API Gateway
     package:
-      # Directories and files to include in the deployed package
       patterns:
         - 'apps/redirect/**'
         - 'apps/common/**'
@@ -97,3 +97,4 @@ functions:
 
 resources:
   - ${file(infrastructure/aws/dynamodb_table.yml)}
+  - ${file(infrastructure/aws/api_gateway.yml)}

@@ -1,0 +1,20 @@
+Resources:
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: ziplink-http-api
+      ProtocolType: HTTP
+      Description: HTTP API Gateway for the ZipLink application
+      Tags:
+        ENV: ${sls:stage}
+        APP: ziplink
+
+  HttpApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref HttpApi
+      StageName: ${sls:stage}
+      AutoDeploy: true
+      Tags:
+        ENV: ${sls:stage}
+        APP: ziplink
